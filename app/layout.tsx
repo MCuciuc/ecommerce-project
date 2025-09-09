@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ModalProvider } from "@/providers/modal-provider";
+import prismadb from "@/lib/prismadb";
 
 
 const geistSans = Geist({
@@ -22,9 +23,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const store = prismadb.
   return (
     <ClerkProvider>
     <html lang="en">
