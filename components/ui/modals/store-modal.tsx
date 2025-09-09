@@ -1,7 +1,7 @@
 "use client";
 
 import * as z from "zod";
-
+import axios from "axios";
 import { Modal } from "@/components/ui/modal";
 import { useStoreModal } from "@/hooks/use-store-modal";
 import { useForm } from "react-hook-form";
@@ -9,11 +9,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 const formSchema = z.object({
     name: z.string().min(1),
 });
 
 export const StoreModal = () => {
+
+    const[loading, setLoading] = useState(false);
     const storeModal = useStoreModal();
     if (typeof window !== "undefined") {
         console.log("StoreModal isOpen:", storeModal.isOpen);
@@ -25,7 +28,16 @@ const form = useForm<z.infer<typeof formSchema>>({
     }
 });
 const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    try {
+        setLoading(true);
+        const response = await axios.post('/api/stores', values)
+
+        console.log(response.data)
+    } catch (error) {
+        console.log(error);
+    } finally {
+        setLoading(false);
+    }
 };
     return (
     <Modal
@@ -46,7 +58,7 @@ const onSubmit = async (values: z.infer<typeof formSchema>) => {
     <FormItem>
     <FormLabel>Name</FormLabel> 
     <FormControl>
-        <Input placeholder="E-commerce" {...field} />
+        <Input disabled={loading} placeholder="E-commerce" {...field} />
         </FormControl>  
         <FormMessage />     
     </FormItem>
@@ -54,7 +66,7 @@ const onSubmit = async (values: z.infer<typeof formSchema>) => {
       )}
       />
      <div className="pt-6 space-x-2 flex items-center justify-end">
-       <Button variant={"outline"} onClick={storeModal.onClose}>Cancel</Button>
+       <Button disabled={loading} variant={"outline"} onClick={storeModal.onClose}>Cancel</Button>
        <Button type="submit">Continue</Button>
      </div>
      </form>

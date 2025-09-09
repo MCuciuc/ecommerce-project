@@ -26,7 +26,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const store = prismadb.
   return (
     <ClerkProvider>
     <html lang="en">
