@@ -1,21 +1,25 @@
 import { NextResponse } from "next/server";
 import prismadb from "@/lib/prismadb";
+import { auth } from "@clerk/nextjs/server";
 
 export async function POST(req: Request) {
     try {
+        const { userId } = await auth();
+        if (!userId) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+
         const body = await req.json();
-        const { name, userId } = body as { name?: string; userId?: string };
+        const { name } = body as { name?: string };
 
         if (!name || name.trim().length === 0) {
             return new NextResponse("Name is required", { status: 400 });
         }
 
-        // If you have auth in place (e.g., Clerk), derive userId from the session instead.
-        // For now, accept optional userId and default to empty string.
         const created = await prismadb.store.create({
             data: {
                 name: name.trim(),
-                userId: userId ?? "",
+                userId,
             },
         });
 

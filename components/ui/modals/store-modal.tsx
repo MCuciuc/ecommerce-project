@@ -9,8 +9,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
     name: z.string().min(1),
@@ -18,6 +19,7 @@ const formSchema = z.object({
 
 export const StoreModal = () => {
 
+    const router = useRouter();
     const[loading, setLoading] = useState(false);
     const storeModal = useStoreModal();
     if (typeof window !== "undefined") {
@@ -32,13 +34,17 @@ const form = useForm<z.infer<typeof formSchema>>({
 const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
         setLoading(true);
-        const response = await axios.post('/api/stores', values)
-        useEffect(() => {
-            toast("Hello from toast!");
-          }, []);
-        toast.success("Store created.")
+        const response = await axios.post('/api/stores', values);
+        toast.success("Store created.");
+        storeModal.onClose();
+        const id = response?.data?.id as string | undefined;
+        if (id) {
+            router.push(`/${id}`);
+        } else {
+            router.refresh();
+        }
     } catch (error) {
-    toast.error("Something went wrong.");
+        toast.error("Something went wrong.");
     } finally {
         setLoading(false);
     }
