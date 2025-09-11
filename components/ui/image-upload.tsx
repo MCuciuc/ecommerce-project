@@ -38,11 +38,16 @@ const ImageUpload = ({ disabled, onChange, onRemove, value }: ImageUploadProps) 
                                 <Trash className="h-4 w-4" />
                             </Button>
                         </div>
-                        <Image src={url} alt="Image" fill className="object-cover" />
+                        <Image src={url} alt="Image" fill sizes="(max-width: 768px) 100vw, 200px" className="object-cover" />
                     </div>
                 ))}
             </div>
-            <CldUploadWidget onUpload={onUpload} uploadPreset="ecommerce" options={{ multiple: false }}>
+            <CldUploadWidget
+                uploadPreset="ecommerce"
+                onError={(err) => console.error("Cloudinary upload error", err)}
+                onSuccess={onUpload}
+                options={{ multiple: false, cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME as string }}
+            >
                 {({ open }) => {
                     return (
                         <Button variant="secondary" onClick={() => open?.()} disabled={disabled}>
