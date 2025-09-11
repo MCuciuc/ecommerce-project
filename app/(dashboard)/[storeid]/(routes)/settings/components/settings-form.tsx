@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { AlertModal } from "@/components/ui/modals/alert-modal";
 import { ApiAlert } from "@/components/ui/api-alert";
+import { useOrigin } from "@/hooks/use-origin";
 
 interface SettingsFormProps {
     initialData: Store;
@@ -31,6 +32,7 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const origin = useOrigin();
     const form = useForm<SettingsFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -112,7 +114,7 @@ export const SettingsForm = ({ initialData }: SettingsFormProps) => {
             </form>
         </Form>
         <Separator />
-        <ApiAlert title="API" description="API Routes for this store" variant="admin" />
+        <ApiAlert title="NEXT_PUBLIC_API_URL" description={`${origin}/api/${initialData.id}`} variant="public" />
         </>
     )
 }
