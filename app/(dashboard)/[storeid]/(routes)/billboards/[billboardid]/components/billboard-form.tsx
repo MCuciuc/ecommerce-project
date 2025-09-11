@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
 // Using a lightweight local type to avoid coupling to Prisma types at build time
-type Billboard = { id: string; label: string };
+type Billboard = { id: string; label: string; imageUrl: string };
 import { Trash } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -41,7 +41,7 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
         resolver: zodResolver(formSchema),
         defaultValues: {
             label: initialData?.label ?? "",
-            imageUrl: "",
+            imageUrl: initialData?.imageUrl ?? "",
         },
     });
 
@@ -55,6 +55,7 @@ export const BillboardForm = ({ initialData }: BillboardFormProps) => {
                 await axios.post(`/api/${storeid}/billboards`, values);
             }
             router.refresh();
+            router.push(`/${storeid}/billboards`);
             toast.success(initialData ? "Billboard updated." : "Billboard created.");
         } catch (error) {
             toast.error("Something went wrong.");

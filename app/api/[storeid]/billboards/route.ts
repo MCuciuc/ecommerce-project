@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import prismadb from "@/lib/prismadb";
+import { reportError } from "@/lib/rollbar";
 
 // Create a billboard for a store
 export async function POST(
@@ -40,6 +41,7 @@ export async function POST(
         const model = client.billboards ?? client.billboard;
         if (!model) {
             console.error('[BILLBOARDS_POST] Prisma model not found');
+            reportError(new Error('Prisma model not found'), { route: 'BILLBOARDS_POST' });
             return new NextResponse("Internal error", { status: 500 });
         }
         const billboard = await model.create({
@@ -53,6 +55,7 @@ export async function POST(
         return NextResponse.json(billboard, { status: 201 });
     } catch (error) {
         console.log('[BILLBOARDS_POST]', error);
+        reportError(error, { route: 'BILLBOARDS_POST' });
         return new NextResponse("Internal error", { status: 500 });
     }
 }
@@ -72,6 +75,7 @@ export async function GET(
         const model = client.billboards ?? client.billboard;
         if (!model) {
             console.error('[BILLBOARDS_GET] Prisma model not found');
+            reportError(new Error('Prisma model not found'), { route: 'BILLBOARDS_GET' });
             return new NextResponse("Internal error", { status: 500 });
         }
         const billboards = await model.findMany({
@@ -81,6 +85,7 @@ export async function GET(
         return NextResponse.json(billboards);
     } catch (error) {
         console.log('[BILLBOARDS_GET]', error);
+        reportError(error, { route: 'BILLBOARDS_GET' });
         return new NextResponse("Internal error", { status: 500 });
     }
 }
