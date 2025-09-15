@@ -46,13 +46,13 @@ const ImageUpload = ({ disabled, onChange, onRemove, value }: ImageUploadProps) 
                 uploadPreset="ecommerce"
                 onError={(err) => console.error("Cloudinary upload error", err)}
                 onSuccess={onUpload}
-                options={{ multiple: false, cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME as string }}
+                options={{ multiple: true, cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME as string }}
             >
                 {({ open }) => {
                     return (
                         <Button variant="secondary" onClick={() => open?.()} disabled={disabled}>
                             <ImagePlus className="h-4 w-4 mr-2" />
-                            Add image
+                            Upload images
                         </Button>
                     )
                 }}
