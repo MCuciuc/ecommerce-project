@@ -4,15 +4,14 @@ import { Heading } from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
 import { Plus } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
-import { BillboardColumn, columns } from "./columns"
+import { OrderColumn, columns } from "./columns"
 import { DataTable } from "@/components/ui/data-table"
-import { ApiList } from "@/components/ui/api-list"
 
-interface BillboardsClientProps {
-    data: BillboardColumn[]
+interface OrdersClientProps {
+    data: OrderColumn[]
 }
 
-export const BillboardsClient = ({ data }: BillboardsClientProps) => {
+export const OrdersClient = ({ data }: OrdersClientProps) => {
     
     const params = useParams()
     const router = useRouter()
@@ -20,16 +19,15 @@ export const BillboardsClient = ({ data }: BillboardsClientProps) => {
         <>
         <div className="flex items-center justify-between">
             <Heading
-            title={`Billboards (Total: ${data.length})`}
-            description="Manage billboards"
+            title={`Orders (Total: ${data.length})`}
+            description="Manage orders"
             />
-            <Button aria-label="Create billboard" onClick={() => router.push(`/${params.storeid}/billboards/new`)}>
+            <Button aria-label="Create product" onClick={() => router.push(`/${params.storeid}/products/new`)}>
                 <Plus className="h-4 w-4" />
             </Button>
         </div>
         <Separator />
-        <DataTable searchKey="label" columns={columns} data={data} />
-        <ApiList entityName="billboards" entityIdName="billboardid" />
+        <DataTable searchKey="products" columns={columns} data={data} />
         </>
     )
 }

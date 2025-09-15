@@ -28,12 +28,7 @@ export const CategoriesClient = ({ data }: CategoriesClientProps) => {
         </div>
         <Separator />
         <DataTable searchKey="name" columns={columns} data={data} />
-        <Heading
-            title="API"
-            description="API calls for Categories"
-            />
-        <Separator />
-        <ApiList entityName="categories" entityIdName="categoryId" />
+        <ApiList entityName="categories" entityIdName="categoryid" />
         </>
     )
 }

@@ -1,40 +1,33 @@
-"use client"
-import { useParams } from "next/navigation"
-import { useOrigin } from "@/hooks/use-origin"
-import { ApiAlert } from "@/components/ui/api-alert"
+"use client";
+import { ApiAlert } from "./api-alert";
+import { Separator } from "./separator";
+import { Heading } from "./heading";
+import { useOrigin } from "@/hooks/use-origin";
+import { useParams } from "next/navigation";
 
-export const ApiList = ({ entityName, entityIdName }: { entityName: string, entityIdName: string }) => {
-    const params = useParams();
+interface ApiListProps {
+    entityName: string; // e.g. "billboards"
+    entityIdName: string; // e.g. "billboardid"
+}
+
+export const ApiList = ({ entityName, entityIdName }: ApiListProps) => {
     const origin = useOrigin();
-    const baseUrl = `${origin}/api/${params.storeid}`;
+    const params = useParams() as { storeid: string };
+
+    const baseUrl = `${origin}/api/${params.storeid}/${entityName}`;
+    const entityUrl = `${baseUrl}/:${entityIdName}`;
 
     return (
-        <div className="space-y-2">
-            <ApiAlert
-                title="GET"
-                variant="public"
-                description={`${baseUrl}/${entityName}`}
-            />
-            <ApiAlert
-                title="GET"
-                variant="public"
-                description={`${baseUrl}/${entityName}/{${entityIdName}}`}
-            />
-            <ApiAlert
-                title="POST"
-                variant="admin"
-                description={`${baseUrl}/${entityName}`}
-            />
-            <ApiAlert
-                title="PATCH"
-                variant="admin"
-                description={`${baseUrl}/${entityName}/{${entityIdName}}`}
-            />
-            <ApiAlert
-                title="DELETE"
-                variant="admin"
-                description={`${baseUrl}/${entityName}/{${entityIdName}}`}
-            />
+        <div className="space-y-4">
+            <Separator />
+            <Heading title="API" description="API endpoints for this resource" />
+            <ApiAlert title="GET" description={baseUrl} variant="public" />
+            <ApiAlert title="POST" description={baseUrl} variant="admin" />
+            <ApiAlert title="GET" description={entityUrl} variant="public" />
+            <ApiAlert title="PATCH" description={entityUrl} variant="admin" />
+            <ApiAlert title="DELETE" description={entityUrl} variant="admin" />
         </div>
-    )
-}
+    );
+};
+
+
