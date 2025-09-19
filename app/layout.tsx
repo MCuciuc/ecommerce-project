@@ -7,6 +7,7 @@ import prismadb from "@/lib/prismadb";
 import { ToasterProvider } from "@/providers/toast-provider";
 import { RollbarConsoleProvider } from "@/providers/rollbar-console-provider";
 import { RollbarBootstrap } from "@/providers/rollbar-bootstrap";
+import { ThemeProvider } from "@/providers/theme-provider";
 
 
 const geistSans = Geist({
@@ -32,13 +33,14 @@ export default function RootLayout({
   return (
     <ClerkProvider>
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-           <ToasterProvider />
-      <ModalProvider />
-      <RollbarBootstrap />
-      <RollbarConsoleProvider />
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <ThemeProvider>
+          <ToasterProvider />
+          <ModalProvider />
+          <RollbarBootstrap />
+          <RollbarConsoleProvider />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
     </ClerkProvider>
