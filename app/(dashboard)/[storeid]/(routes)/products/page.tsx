@@ -4,11 +4,13 @@ import { ProductsClient } from "./components/client";
 import { ProductColumn } from "./components/columns";
 import { formatter } from "@/lib/utils";
 
-const ProductsPage = async ({ params }: { params: Promise<{ storeid: string }> }) => {
+const ProductsPage = async ({ params, searchParams }: { params: Promise<{ storeid: string }>; searchParams?: { [key: string]: string | string[] | undefined } }) => {
     const { storeid } = await params;
+    const categoryId = (searchParams?.categoryId as string | undefined) || undefined;
     const products = await prismadb.product.findMany({
         where: {
             storeId: storeid,
+            categoryId,
         },
         orderBy: { createdAt: 'desc' },
         include: {

@@ -74,7 +74,7 @@ export async function POST(
 
 // List all products for a store
 export async function GET(
-    _req: Request,
+    req: Request,
     ctx: { params: Promise<{ storeid: string }> }
 ) {
     try {
@@ -83,8 +83,25 @@ export async function GET(
             return new NextResponse("Store id is required", { status: 400 });
         }
 
+        const { searchParams } = new URL(req.url);
+        const categoryId = searchParams.get('categoryId') || undefined;
+        const sizeId = searchParams.get('sizeId') || undefined;
+        const colorId = searchParams.get('colorId') || undefined;
+        const isFeaturedParam = searchParams.get('isFeatured');
+        const isArchivedParam = searchParams.get('isArchived');
+
+        const isFeatured = typeof isFeaturedParam === 'string' ? isFeaturedParam === 'true' : undefined;
+        const isArchived = typeof isArchivedParam === 'string' ? isArchivedParam === 'true' : undefined;
+
         const products = await prismadb.product.findMany({
-            where: { storeId: storeid },
+            where: {
+                storeId: storeid,
+                categoryId,
+                sizeId,
+                colorId,
+                isFeatured,
+                isArchived,
+            },
             orderBy: { createdAt: 'desc' },
             include: { images: true, category: true, size: true, color: true },
         });
